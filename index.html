@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecoFilms - Recommandations Personnalisées</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #cde6f9;
+      --secondary: #f9e2f4;
+      --accent: #f9e79f;
+      --text-dark: #2c2c2c;
+      --text-light: #666;
+      --background: linear-gradient(to right, #FFE4EC, #E8D9FF, #D6F0FF);
+      --background2: linear-gradient(to right, #D6F0FF, #E8D9FF, #FFE4EC);
+      --lavender: linear-gradient(to right, #FFE4EC, #E8D9FF, #D6F0FF);
+      ;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      color: var(--text-dark);
+    }
+
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--background2);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #2c2c2c;
+    }
+
+    header {
+      padding: 6rem 2rem 2rem;
+      text-align: center;
+      background: var(--background);
+    }
+
+    header p {
+      font-size: 1.3rem;
+      color: var(--text-light);
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    #search-section {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    #search-section input {
+      padding: 1rem;
+      font-size: 1.1rem;
+      border: 2px solid var(--accent);
+      border-radius: 5px;
+      flex: 1;
+      min-width: 700px;
+    }
+
+    #search-section button {
+      padding: 1rem 1.5rem;
+      font-size: 1.3rem;
+      min-width: 180px; /* plus long qu’avant */
+      flex-shrink: 0;
+      background-color: var(--accent);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #444;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #f7dc6f;
+    }
+
+    section h2 {
+      text-align: center;
+      color: #444;
+      margin-top: 3rem;
+      font-size: 1.6rem;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .movie-card {
+      background-color: var(--secondary);
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .movie-card h3 {
+      margin: 0.5rem 0 0.3rem;
+      font-size: 1.4rem;
+      color: #333;
+    }
+
+    .movie-card p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+    }
+
+    .movie-card .rating {
+      color: #f39c12;
+      font-weight: bold;
+    }
+
+    .movie-card .tmdb-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+      color: #2c3e50;
+      text-decoration: none;
+    }
+
+    .movie-card .tmdb-link:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.95rem;
+      padding: 2rem 1rem;
+      background-color: var(--lavender);
+      color: var(--text-light);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #2c3e50;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <nav>
+      <h1>🎬 RecoFilms</h1>
+    </nav>
+
+    <header>
+      <p>Des recommandations de films personnalisées rien que pour vous !</p>
+    </header>
+
+    <main>
+      <section id="search-section">
+        <input type="text" id="movie-input" placeholder="Entrez un titre de film" />
+        <button onclick="searchMovie()">Rechercher</button>
+      </section>
+
+      <section id="recommendations">
+        <h2>🎞 Suggestions basées sur les genres</h2>
+        <div class="movie-grid" id="movie-list"></div>
+      </section>
+    </main>
+
+    <footer>
+      RecoFilms © 2025 – <a href="#">À propos</a> | <a href="#">Source</a> | <a href="#">Contact</a>
+    </footer>
+  </div>
+</body>
+</html>
+  <script>
+    async function searchMovie() {
+      const title = document.getElementById('movie-input').value;
+      if (!title) return;
+  
+      const res = await fetch('/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      });
+  
+      const data = await res.json();
+      const container = document.getElementById('movie-list');
+      container.innerHTML = '';
+  
+      if (data.error) {
+        container.innerHTML = `<p>${data.error}</p>`;
+        return;
+      }
+  
+      for (const title of data.recommendations) {
+        const tmdbData = await fetchTMDb(title);
+        container.innerHTML += createCard(tmdbData, title);
+      }
+    }
+  
+    async function fetchTMDb(title) {
+      const apiKey = '12d5a65a36a7a0f3a9f065d85765f224';
+      const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(title)}&api_key=${apiKey}&language=fr-FR`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.results || data.results.length === 0) {
+        return null;
+      }
+      return data.results[0];
+    }
+  
+    function createCard(movie, fallbackTitle) {
+      console.log('Received movie:', movie);
+      if (!movie || !movie.poster_path) {
+        return `<div class="movie-card"><h3>${fallbackTitle}</h3><p>Pas d'info disponible</p></div>`;
+      }
+  
+      const tmdbLink = `https://www.themoviedb.org/movie/${movie.id}`;
+      return `
+        <div class="movie-card" onclick="window.open('${tmdbLink}', '_blank')" style="cursor: pointer;">
+          <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}" />
+          <h3>${movie.title}</h3>
+          <p>${movie.overview.slice(0, 100)}...</p>
+          <p class="rating">⭐ ${movie.vote_average}/10</p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
